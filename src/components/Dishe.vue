@@ -8,7 +8,7 @@
 
     <q-card-section>
       <q-rating
-        :value="dishe.note"
+        :model-value="dishe.note"
         size="2em"
         color="orange"
         readonly
