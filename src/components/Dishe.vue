@@ -24,7 +24,7 @@
       <q-btn @click="showFormDishe = true" icon="edit" color="blue" flat
         >Modifier</q-btn
       >
-      <q-btn icon="delete" color="red" flat>Supprimer</q-btn>
+      <q-btn icon="delete" color="red" @click="removeDisheById(dishe.id)"  flat>Supprimer</q-btn>
     </q-card-actions>
 
     <q-dialog v-model="showFormDishe">
@@ -35,11 +35,16 @@
 
 <script setup>
   import { ref } from 'vue'
+  import { useStore } from 'src/stores/task.js'
+
   import formDishe from 'components/FormDishe.vue'
 
   defineProps(['dishe'])
 
+  const store = useStore()
   const showFormDishe = ref(false)
+
+  const removeDisheById = store.removeDisheById
 </script>
 
 <style>

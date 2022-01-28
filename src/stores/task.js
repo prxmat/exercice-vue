@@ -41,8 +41,14 @@ export const useStore = defineStore("task", {
   },
 
   getters: {
-    dishesCollection(state) {
+    dishesCollection: (state) => {
       return Object.values(state.dishes)
     }
+  },
+
+  actions: {
+    removeDisheById(id) {
+      delete this.dishes[id]
+    },
   },
 });
