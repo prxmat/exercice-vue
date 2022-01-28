@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <div class="row q-gutter-lg">
-      <dishe v-for="dishe in dishes" :key="dishe.id" :dishe="dishe" />
+      <dishe v-for="dishe in store.dishesCollection" :key="dishe.id" :dishe="dishe" />
 
       <add-button @click="showFormDishe = true" />
 
@@ -15,15 +15,12 @@
 <script setup> 
 import { ref } from 'vue'
 import { useStore } from 'src/stores/task.js'
-import { storeToRefs } from 'pinia'
 
 import AddButton from 'components/AddButton.vue'
 import Dishe from 'components/Dishe.vue'
 import FormDishe from 'components/FormDishe.vue'
 
 const store = useStore()
-
-const { dishes } = storeToRefs(store)
 const showFormDishe = ref(false)
 
 </script>
