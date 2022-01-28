@@ -33,18 +33,13 @@
   </q-card>
 </template>
 
-<script>
-export default {
-  props: ["dishe"],
-  data() {
-    return {
-      showFormDishe: false
-    };
-  },
-  components: {
-    "form-dishe": require("components/FormDishe.vue").default
-  }
-};
+<script setup>
+  import { ref } from 'vue'
+  import formDishe from 'components/FormDishe.vue'
+
+  defineProps(['dishe'])
+
+  const showFormDishe = ref(false)
 </script>
 
 <style>

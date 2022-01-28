@@ -50,20 +50,17 @@
   </q-card>
 </template>
 
-<script>
-export default {
-  props: ["action"],
-  data() {
-    return {
-      dishe: {
-        name: "",
-        description: "",
-        note: 1,
-        image: ""
-      }
-    };
-  }
-};
+<script setup>
+import { reactive } from 'vue'
+
+defineProps(['action'])
+
+const dishe = reactive({
+  name: '',
+  description: '',
+  note: 1,
+  image: ''
+})
 </script>
 
 <style>
