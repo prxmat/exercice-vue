@@ -14,13 +14,13 @@
 
 <script setup> 
 import { ref } from 'vue'
-import { useStore } from 'src/stores/task.js'
+import { useTaskStore } from 'src/stores/task.js'
 
 import AddButton from 'components/AddButton.vue'
 import Dishe from 'components/Dishe.vue'
 import FormDishe from 'components/FormDishe.vue'
 
-const store = useStore()
+const store = useTaskStore()
 const showFormDishe = ref(false)
 
 </script>

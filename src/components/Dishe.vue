@@ -24,7 +24,9 @@
       <q-btn @click="showFormDishe = true" icon="edit" color="blue" flat
         >Modifier</q-btn
       >
-      <q-btn icon="delete" color="red" @click="removeDisheById(dishe.id)"  flat>Supprimer</q-btn>
+      <q-btn icon="delete" color="red" @click="removeDishe(dishe)" flat
+        >Supprimer</q-btn
+      >
     </q-card-actions>
 
     <q-dialog v-model="showFormDishe">
@@ -34,17 +36,27 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { useStore } from 'src/stores/task.js'
+import { ref } from "vue";
+import { useTaskStore } from "src/stores/task.js";
+import { useQuasar } from "quasar";
+import formDishe from "components/FormDishe.vue";
 
-  import formDishe from 'components/FormDishe.vue'
+const store = useTaskStore();
+const $q = useQuasar();
 
-  defineProps(['dishe'])
+defineProps(["dishe"]);
+const showFormDishe = ref(false);
 
-  const store = useStore()
-  const showFormDishe = ref(false)
-
-  const removeDisheById = store.removeDisheById
+function removeDishe(dishe) {
+  $q.dialog({
+    title: "Confirmation",
+    message: `Etes-vous certain de vouloir supprimer la recette ${dishe.name} ?`,
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    store.removeDisheById(dishe.id);
+  });
+}
 </script>
 
 <style>
