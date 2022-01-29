@@ -24,13 +24,13 @@
       <q-btn @click="showFormDishe = true" icon="edit" color="blue" flat
         >Modifier</q-btn
       >
-      <q-btn icon="delete" color="red" @click="removeDishe(dishe)" flat
+      <q-btn icon="delete" color="red" @click="handleRemove(dishe)" flat
         >Supprimer</q-btn
       >
     </q-card-actions>
 
     <q-dialog v-model="showFormDishe">
-      <form-dishe action="modifier" />
+      <form-dishe action="edit" :item="dishe" />
     </q-dialog>
   </q-card>
 </template>
@@ -47,7 +47,7 @@ const $q = useQuasar();
 defineProps(["dishe"]);
 const showFormDishe = ref(false);
 
-function removeDishe(dishe) {
+function handleRemove(dishe) {
   $q.dialog({
     title: "Confirmation",
     message: `Etes-vous certain de vouloir supprimer la recette ${dishe.name} ?`,

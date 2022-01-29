@@ -45,22 +45,47 @@
 
     <q-card-actions align="right">
       <q-btn label="Annuler" color="grey" v-close-popup />
-      <q-btn label="Sauver" color="primary" v-close-popup />
+      <q-btn label="Sauver" color="primary" @click="handleSave" v-close-popup />
     </q-card-actions>
   </q-card>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, onBeforeMount } from "vue";
+import { useTaskStore } from "src/stores/task.js";
 
-defineProps(['action'])
+const props = defineProps(["action", "item"]);
+
+const store = useTaskStore();
 
 const dishe = reactive({
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   note: 1,
-  image: ''
-})
+  image: "",
+});
+
+onBeforeMount(() => {
+  if (props.action === "edit") {
+    dishe.name = props.item.name;
+    dishe.description = props.item.description;
+    dishe.note = props.item.note;
+    dishe.image = props.item.image;
+  }
+});
+
+function handleSave() {
+  if (props.action === "add") handleCreate();
+  if (props.action === "edit") handleEdit();
+}
+
+function handleCreate() {
+  store.addDishe(dishe);
+}
+
+function handleEdit() {
+  store.updateDisheById(props.item.id, dishe);
+}
 </script>
 
 <style>

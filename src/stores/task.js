@@ -47,6 +47,22 @@ export const useTaskStore = defineStore("task", {
   },
 
   actions: {
+    // This hack should not be exist if dishe creation had been sync with a real DB.
+    getNewId() {
+      const ids = Object.keys(this.dishes).sort()
+      return ids.length < 1 ? 0 : parseInt(ids.at(-1)) + 1
+    },
+
+    addDishe(dishe) {
+      const id = this.getNewId()
+      this.dishes[id] = { ...dishe, id }
+    },
+
+    updateDisheById(id, dishe) {
+      console.log('id', id)
+      this.dishes[id] = { ...dishe, id }
+    },
+
     removeDisheById(id) {
       delete this.dishes[id]
     },
