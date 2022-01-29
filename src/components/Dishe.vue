@@ -16,8 +16,8 @@
       />
     </q-card-section>
 
-    <q-card-section>
-      {{ dishe.description }}
+    <q-card-section :style="{ fontStyle: descriptionFontStyle }">
+      {{ description }}
     </q-card-section>
 
     <q-card-actions class="absolute-bottom" align="right">
@@ -36,16 +36,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useTaskStore } from "src/stores/task.js";
 import { useQuasar } from "quasar";
 import formDishe from "components/FormDishe.vue";
 
 const store = useTaskStore();
 const $q = useQuasar();
+const props = defineProps(["dishe"]);
 
-defineProps(["dishe"]);
 const showFormDishe = ref(false);
+
+const description = computed(() => props.dishe.description || 'Aucune description fournie'
+)
+
+const descriptionFontStyle = computed(() => props.dishe.description ? 'normal' : 'italic')
 
 function handleRemove(dishe) {
   $q.dialog({
