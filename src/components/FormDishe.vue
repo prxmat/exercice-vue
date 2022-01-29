@@ -35,7 +35,7 @@
             class="col"
           />
           <q-img
-            :src="dishe.image ? dishe.image : 'statics/image-placeholder.png'"
+            :src="dishe.image ? dishe.image : 'image-placeholder.png'"
             class="q-ml-sm"
             contain
           />

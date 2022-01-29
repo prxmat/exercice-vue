@@ -1,6 +1,10 @@
 <template>
   <q-card class="card">
-    <q-img :src="dishe.image" basic contain>
+    <q-img
+      :src="dishe.image ? dishe.image : 'image-placeholder.png'"
+      basic
+      contain
+    >
       <div class="absolute-bottom text-h6">
         {{ dishe.name }}
       </div>
@@ -47,10 +51,13 @@ const props = defineProps(["dishe"]);
 
 const showFormDishe = ref(false);
 
-const description = computed(() => props.dishe.description || 'Aucune description fournie'
-)
+const description = computed(
+  () => props.dishe.description || "Aucune description fournie"
+);
 
-const descriptionFontStyle = computed(() => props.dishe.description ? 'normal' : 'italic')
+const descriptionFontStyle = computed(() =>
+  props.dishe.description ? "normal" : "italic"
+);
 
 function handleRemove(dishe) {
   $q.dialog({
