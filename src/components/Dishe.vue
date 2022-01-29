@@ -30,7 +30,7 @@
     </q-card-actions>
 
     <q-dialog v-model="showFormDishe">
-      <form-dishe action="edit" :item="dishe" />
+      <form-dishe action="edit" :item="dishe" @submit="showFormDishe = false" />
     </q-dialog>
   </q-card>
 </template>
