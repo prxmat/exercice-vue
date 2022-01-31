@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 
 export const useTaskStore = defineStore("task", {
   state: () => {
     return {
-      dishes: {
+      dishes: useStorage("dishes", {
         1: {
           id: 1,
           image: "https://i.imgur.com/0umadnY.jpg",
@@ -36,35 +37,35 @@ export const useTaskStore = defineStore("task", {
             "Les BBQ ribs ou barbecue ribs sont des grands classiques très appréciés partout dans le monde.",
           note: 5,
         },
-      },
+      }),
     };
   },
 
   getters: {
     dishesCollection: (state) => {
-      return Object.values(state.dishes)
-    }
+      return Object.values(state.dishes);
+    },
   },
 
   actions: {
     // This hack should not be exist if dishe creation had been sync with a real DB.
     getNewId() {
-      const ids = Object.keys(this.dishes).sort()
-      return ids.length < 1 ? 0 : parseInt(ids.at(-1)) + 1
+      const ids = Object.keys(this.dishes).sort();
+      return ids.length < 1 ? 0 : parseInt(ids.at(-1)) + 1;
     },
 
     addDishe(dishe) {
-      const id = this.getNewId()
-      this.dishes[id] = { ...dishe, id }
+      const id = this.getNewId();
+      this.dishes[id] = { ...dishe, id };
     },
 
     updateDisheById(id, dishe) {
-      console.log('id', id)
-      this.dishes[id] = { ...dishe, id }
+      console.log("id", id);
+      this.dishes[id] = { ...dishe, id };
     },
 
     removeDisheById(id) {
-      delete this.dishes[id]
+      delete this.dishes[id];
     },
   },
 });
