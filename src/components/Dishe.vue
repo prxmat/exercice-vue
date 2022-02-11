@@ -1,6 +1,10 @@
 <template>
   <q-card class="card">
-    <q-img :src="dishe.image" basic contain>
+    <q-img
+      :src="dishe.image ? dishe.image : 'image-placeholder.png'"
+      basic
+      contain
+    >
       <div class="absolute-bottom text-h6">
         {{ dishe.name }}
       </div>
@@ -8,7 +12,7 @@
 
     <q-card-section>
       <q-rating
-        :value="dishe.note"
+        :model-value="dishe.note"
         size="2em"
         color="orange"
         readonly
@@ -16,35 +20,55 @@
       />
     </q-card-section>
 
-    <q-card-section>
-      {{ dishe.description }}
+    <q-card-section :style="{ fontStyle: descriptionFontStyle }">
+      {{ description }}
     </q-card-section>
 
     <q-card-actions class="absolute-bottom" align="right">
       <q-btn @click="showFormDishe = true" icon="edit" color="blue" flat
         >Modifier</q-btn
       >
-      <q-btn icon="delete" color="red" flat>Supprimer</q-btn>
+      <q-btn icon="delete" color="red" @click="handleRemove(dishe)" flat
+        >Supprimer</q-btn
+      >
     </q-card-actions>
 
     <q-dialog v-model="showFormDishe">
-      <form-dishe action="modifier" />
+      <form-dishe action="edit" :item="dishe" @submit="showFormDishe = false" />
     </q-dialog>
   </q-card>
 </template>
 
-<script>
-export default {
-  props: ["dishe"],
-  data() {
-    return {
-      showFormDishe: false
-    };
-  },
-  components: {
-    "form-dishe": require("components/FormDishe.vue").default
-  }
-};
+<script setup>
+import { ref, computed } from "vue";
+import { useTaskStore } from "src/stores/task.js";
+import { useQuasar } from "quasar";
+import formDishe from "components/FormDishe.vue";
+
+const store = useTaskStore();
+const $q = useQuasar();
+const props = defineProps(["dishe"]);
+
+const showFormDishe = ref(false);
+
+const description = computed(
+  () => props.dishe.description || "Aucune description fournie"
+);
+
+const descriptionFontStyle = computed(() =>
+  props.dishe.description ? "normal" : "italic"
+);
+
+function handleRemove(dishe) {
+  $q.dialog({
+    title: "Confirmation",
+    message: `Etes-vous certain de vouloir supprimer la recette ${dishe.name} ?`,
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    store.removeDisheById(dishe.id);
+  });
+}
 </script>
 
 <style>
