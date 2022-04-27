@@ -38,20 +38,14 @@
   </q-layout>
 </template>
 
-<script>
-import { openURL } from "quasar";
+<script setup lang="ts">
+  import { useQuasar } from 'quasar';
+  import { ref } from 'vue';
 
-export default {
-  name: "MyLayout",
-  data() {
-    return {
-      leftDrawerOpen: this.$q.platform.is.desktop
-    };
-  },
-  methods: {
-    openURL
-  }
-};
+  const $q = useQuasar()
+
+  const leftDrawerOpen = ref($q.platform.is.desktop);
+
 </script>
 
 <style></style>

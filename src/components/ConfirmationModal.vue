@@ -11,8 +11,9 @@
   </q-card>
 </template>
 
-<script>
-export default {
-  props: ["text", "confirmText", "cancelText"]
-};
+<script setup lang="ts">
+
+  defineProps(['text', 'confirmText', 'cancelText']);
+  defineEmits(['confirm']);
+
 </script>

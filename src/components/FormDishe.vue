@@ -46,7 +46,7 @@
             class="col"
           />
           <q-img
-            :src="dishe.image ? dishe.image : 'statics/image-placeholder.png'"
+            :src="dishe.image ? dishe.image : 'image-placeholder.png'"
             class="q-ml-sm"
             contain
           />
@@ -72,62 +72,98 @@
   </q-card>
 </template>
 
-<script>
+<script setup lang="ts">
   import {ADD_DISHE, UPDATE_DISHE} from '../constants/actions.const';
-  import {
-    TASKS_ACTIONS_ADD_DISHE,
-    TASKS_ACTIONS_UPDATE_DISHE,
-    TASKS_GETTERS_GET_DISHE
-  } from '../store/store.const';
+  import { Dishe } from 'src/models/models';
+  import { computed, ref } from 'vue';
+  import { useTasksStore } from 'src/stores/tasks.store-module';
 
-export default {
-
-  props: {
-    action: {
-      type: String,
-      default: ADD_DISHE
-    },
-
-    disheId: {
-      type: Number,
+  const props = withDefaults(
+    defineProps<{
+                action: typeof ADD_DISHE | typeof UPDATE_DISHE;
+                disheId?: number;
+              }>(),
+    {
+      action: ADD_DISHE
     }
-  },
+  );
 
-  computed: {
-    actionName() {
-      return this.$props.action === UPDATE_DISHE ? 'Modifier un' : 'Ajouter un'
-    }
-  },
+  if (props.action === UPDATE_DISHE && !props.disheId) {
+    throw `Mauvais usage du composant FormDishe : un disheId est obligatoire pour l'action ${UPDATE_DISHE}`;
+  }
 
-  data() {
+  const tasksStore = useTasksStore();
 
-    if (this.$props.action === UPDATE_DISHE && !this.$props.disheId) {
-      throw `Mauvais usage du composant FormDishe : un disheId est obligatoire pour l'action ${UPDATE_DISHE}`;
-    }
+  const actionName = computed(() => props.action === UPDATE_DISHE ? 'Modifier un' : 'Ajouter un');
 
-    return {
-      dishe: this.$props.action === UPDATE_DISHE
-        ? {...this.$store.getters[TASKS_GETTERS_GET_DISHE](this.$props.disheId)}
-        : {
-            name: "",
-            description: "",
-            note: 1,
-            image: ""
-          }
-    };
-  },
+  const emit = defineEmits(['close'])
 
-  methods: {
-    onSubmit() {
-      this.$store.dispatch(this.$props.action === UPDATE_DISHE ? TASKS_ACTIONS_UPDATE_DISHE : TASKS_ACTIONS_ADD_DISHE, this.dishe);
-      this.$emit('close');
-    },
+  const dishe = ref<Dishe>(props.action === UPDATE_DISHE
+                    ? {...tasksStore.getDishe(props.disheId as number) as Dishe}
+                    : {
+                        id: tasksStore.getNewId,
+                        name: '',
+                        description: '',
+                        note: 1,
+                        image: ''
+                      });
 
-  },
+  function onSubmit() {
 
-  emits: ['close']
+    const actionToPerform = props.action === UPDATE_DISHE ? tasksStore.updateDishe : tasksStore.addDishe;
 
-};
+    actionToPerform(dishe.value);
+    emit('close');
+  }
+
+// export default {
+
+//   props: {
+//     action: {
+//       type: String,
+//       default: ADD_DISHE
+//     },
+
+//     disheId: {
+//       type: Number,
+//     }
+//   },
+
+//   computed: {
+//     actionName() {
+//       return this.$props.action === UPDATE_DISHE ? 'Modifier un' : 'Ajouter un'
+//     }
+//   },
+
+//   data() {
+
+//     if (this.$props.action === UPDATE_DISHE && !this.$props.disheId) {
+//       throw `Mauvais usage du composant FormDishe : un disheId est obligatoire pour l'action ${UPDATE_DISHE}`;
+//     }
+
+//     return {
+//       dishe: this.$props.action === UPDATE_DISHE
+//         ? {...this.$store.getters[TASKS_GETTERS_GET_DISHE](this.$props.disheId)}
+//         : {
+//             name: '',
+//             description: '',
+//             note: 1,
+//             image: ''
+//           }
+//     };
+//   },
+
+//   methods: {
+//     onSubmit() {
+//       this.$store.dispatch(this.$props.action === UPDATE_DISHE ? TASKS_ACTIONS_UPDATE_DISHE : TASKS_ACTIONS_ADD_DISHE, this.dishe);
+//       this.$emit('close');
+//     },
+
+//   },
+
+//   emits: ['close']
+
+// };
 </script>
 
 <style>

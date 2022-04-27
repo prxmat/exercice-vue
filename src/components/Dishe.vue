@@ -1,6 +1,31 @@
+<script setup lang="ts">
+import { UPDATE_DISHE } from '../constants/actions.const';
+import FormDishe from './FormDishe.vue';
+import ConfirmationModal from './ConfirmationModal.vue';
+import { ref } from 'vue';
+import { useTasksStore } from '../stores/tasks.store-module';
+import { Dishe } from 'src/models/models';
+
+const showFormDishe = ref(false);
+const showConfirmDeleteDishe = ref(false);
+const constants = ref({UPDATE_DISHE});
+
+const props = defineProps<{
+  dishe: Dishe
+}>();
+
+const taskStore = useTasksStore();
+
+function deleteSelf() {
+  taskStore.deleteDishe(props.dishe.id);
+}
+
+</script>
+
+
 <template>
   <q-card class="card">
-    <q-img :src="dishe.image || 'statics/image-placeholder.png'" basic contain>
+    <q-img :src="dishe.image || 'image-placeholder.png'" basic contain>
       <div class="absolute-bottom text-h6">
         {{ dishe.name }}
       </div>
@@ -8,7 +33,7 @@
 
     <q-card-section>
       <q-rating
-        :value="dishe.note"
+        :model-value="dishe.note"
         size="2em"
         color="orange"
         readonly
@@ -30,48 +55,22 @@
     </q-card-actions>
 
     <q-dialog v-model="showFormDishe">
-      <form-dishe :action="constants.UPDATE_DISHE"
-                  :disheId="dishe.id"
-                  @close="showFormDishe = false"
-                  />
+      <FormDishe :action="constants.UPDATE_DISHE"
+                 :disheId="dishe.id"
+                 @close="showFormDishe = false"
+                 />
     </q-dialog>
 
     <q-dialog v-model="showConfirmDeleteDishe" persistent>
-      <confirmation-modal text="Êtes-vous sûr de vouloir retirer ce plat de la liste ?"
-                          @confirm="deleteSelf"
-                          confirmText="Retirer"
-                          cancelText="Annuler"
-                          />
+      <ConfirmationModal text="Êtes-vous sûr de vouloir retirer ce plat de la liste ?"
+                         @confirm="deleteSelf"
+                         confirmText="Retirer"
+                         cancelText="Annuler"
+                         />
     </q-dialog>
   </q-card>
 </template>
 
-<script>
-import { TASKS_ACTIONS_DELETE_DISHE } from "../store/store.const";
-import { UPDATE_DISHE } from "../constants/actions.const";
-
-export default {
-  props: ["dishe"],
-  data() {
-    return {
-      showFormDishe: false,
-      showConfirmDeleteDishe: false,
-      constants: {
-        UPDATE_DISHE
-      }
-    };
-  },
-  components: {
-    "form-dishe": require("components/FormDishe.vue").default,
-    "confirmation-modal": require("components/ConfirmationModal.vue").default
-  },
-  methods: {
-    deleteSelf() {
-      this.$store.dispatch(TASKS_ACTIONS_DELETE_DISHE, this.dishe.id)
-    }
-  }
-};
-</script>
 
 <style>
 .card {
@@ -88,6 +87,7 @@ export default {
 }
 .card .q-img {
   max-height: 180px;
+  height: 100%;
 }
 .card .q-img__image {
   background-size: cover !important;
