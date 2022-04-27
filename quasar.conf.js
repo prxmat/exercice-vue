@@ -44,7 +44,8 @@ module.exports = function (ctx) {
         'QImg',
         'QRating',
         'QDialog',
-        'QInput'
+        'QInput',
+        'QForm'
       ],
 
       directives: [
